@@ -139,7 +139,7 @@ IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations
         const responseData = await response.json();
 
         // Extract content from VertexAI response format
-        const content = responseData?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const content = (responseData as any)?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (!content) {
             throw new Error('No response from Gemini AI service');
