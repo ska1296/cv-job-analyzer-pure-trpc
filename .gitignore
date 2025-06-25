@@ -1,5 +1,6 @@
 .idea
 node_modules
+dist
 .env
 sample-cv.pdf
 sample-job.pdf
