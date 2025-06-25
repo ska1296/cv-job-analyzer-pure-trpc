@@ -57,14 +57,27 @@ The server will start on `http://localhost:3000`
 
 ## 🧪 Testing the API
 
-### Method 1: Test Client Script (Easiest)
+### Built-in Test Client
 
 ```bash
 # Run the built-in test client
 npm run test-client
 ```
 
-This will test the health endpoint and analyze sample PDFs if they exist in the root directory.
+**How it works:**
+- The test client reads `sample-job.pdf` and `sample-cv.pdf` from the project root directory
+- PDFs are loaded from disk using `fs.readFileSync()` and converted to base64
+- The client makes a tRPC call to the `/analyze` endpoint
+- Results are displayed in the console
+
+**To test with your own PDFs:**
+1. Replace `sample-job.pdf` with your job description PDF
+2. Replace `sample-cv.pdf` with your candidate's CV PDF
+3. Run `npm run test-client`
+
+**To modify the test client:**
+- Edit `src/test-client.ts` to change file paths, add logging, or test different scenarios
+- The client code shows exactly how to integrate tRPC calls into your application
 
 ### Method 2: tRPC Client (Recommended)
 
@@ -182,23 +195,6 @@ The AI evaluates candidates based on:
 - **Cultural Fit**: Values alignment, work style compatibility
 - **Growth Potential**: Learning ability, career trajectory
 
-## 🚨 Error Handling
-
-The system handles various error scenarios:
-
-- Invalid PDF files
-- Large file uploads (10MB limit)
-- Missing or invalid authorization tokens
-- Network issues with AI service
-- Malformed requests
-
-## 🔐 Security Considerations
-
-- File size limits (10MB)
-- PDF-only file type validation
-- Memory-based file storage (no disk persistence)
-- Input validation with Zod schemas
-- Error message sanitization
 
 ## 📝 Customization
 
