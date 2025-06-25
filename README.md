@@ -137,6 +137,7 @@ src/
 │   └── ai-service.ts  # AI analysis logic
 └── utils/
     └── pdf-parser.ts  # PDF text extraction
+evaluation-prompt.txt  # AI evaluation prompt template
 ```
 
 ### Available Scripts
@@ -201,7 +202,9 @@ The system handles various error scenarios:
 
 ### Adding Custom Analysis Logic
 
-Modify `src/services/ai-service.ts` to customize the analysis prompt or add additional evaluation criteria.
+To customize the AI evaluation criteria, edit the `evaluation-prompt.txt` file. This contains the prompt template sent to the AI service with placeholders for job description and CV content.
+
+You can also modify `src/services/ai-service.ts` to add additional processing logic or change the AI service configuration.
 
 ### Extending the API
 
