@@ -52,7 +52,7 @@ export async function analyzeWithAI(jobDescription: string, cv: string): Promise
 
     try {
         const prompt = `
-You are an expert HR analyst. Analyze the following job description and CV/resume, then provide a comprehensive evaluation.
+You are an expert HR analyst and technical recruiter. Analyze the following job description and CV/resume, then provide a comprehensive evaluation.
 
 JOB DESCRIPTION:
 ${jobDescription}
@@ -70,14 +70,22 @@ Please analyze and provide a response in the following JSON format:
   "summary": "Overall assessment summary"
 }
 
-Focus on:
-1. Technical skills alignment
-2. Experience relevance
-3. Educational background fit
-4. Cultural/role alignment indicators
-5. Growth potential
+Analysis Guidelines:
+1. **Technical Skills**: Match specific technologies, frameworks, and tools mentioned in both documents
+2. **Experience Level**: Compare required vs actual years of experience, seniority level
+3. **Industry Context**: Consider domain expertise, company size/stage alignment
+4. **Role Responsibilities**: Evaluate how past roles align with job requirements
+5. **Cultural Fit**: Assess work environment preferences, team dynamics, growth mindset
+6. **Red Flags**: Identify any concerning gaps, inconsistencies, or misalignments
 
-Provide specific, actionable insights. The alignment score should be 0-100 based on how well the candidate matches the job requirements.
+Scoring Criteria (0-100):
+- 90-100: Exceptional fit, minimal gaps
+- 80-89: Strong fit, minor gaps that can be addressed
+- 70-79: Good fit, some notable gaps requiring discussion
+- 60-69: Moderate fit, significant gaps but potential
+- Below 60: Poor fit, major misalignments
+
+Provide specific, actionable insights with concrete examples from the CV. Focus on what makes this candidate unique and what specific questions to ask in interviews.
 
 IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations, just the JSON object.
 `;
