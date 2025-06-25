@@ -31,6 +31,7 @@ async function testAnalysis() {
             console.log(JSON.stringify(result, null, 2));
         } else {
             console.log('\n⚠️  No sample PDFs found. Place sample-job.pdf and sample-cv.pdf in the root directory to test analysis.');
+            console.log('💡 Note: Ensure GEMINI_AUTH_TOKEN is set in your .env file for AI analysis to work.');
         }
     } catch (error) {
         console.error('❌ Error:', error);

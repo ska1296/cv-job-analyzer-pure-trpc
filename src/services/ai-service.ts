@@ -42,9 +42,7 @@ export interface AnalysisResult {
 
 export async function analyzeWithAI(jobDescription: string, cv: string): Promise<AnalysisResult> {
     if (!AUTH_TOKEN) {
-        // Fallback to mock analysis if no auth token is provided
-        console.log('No GEMINI_AUTH_TOKEN provided, using mock analysis');
-        return mockAnalysis(jobDescription, cv);
+        throw new Error('GEMINI_AUTH_TOKEN is required for AI analysis');
     }
 
     try {
@@ -151,65 +149,7 @@ IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations
     } catch (error) {
         console.error('Gemini AI analysis error:', error);
 
-        if (error instanceof Error && (
-            error.message.includes('Rate limit') ||
-            error.message.includes('auth') ||
-            error.message.includes('token') ||
-            error.message.includes('401') ||
-            error.message.includes('403')
-        )) {
-            throw error; // Re-throw auth/rate limit errors
-        }
-
-        // Fallback to mock analysis on other AI service errors
-        console.log('Falling back to mock analysis due to Gemini AI service error');
-        return mockAnalysis(jobDescription, cv);
+        // Re-throw all errors - no fallback
+        throw error;
     }
-}
-
-function mockAnalysis(jobDescription: string, cv: string): AnalysisResult {
-    // Simple keyword matching for mock analysis
-    const jobKeywords = extractKeywords(jobDescription.toLowerCase());
-    const cvKeywords = extractKeywords(cv.toLowerCase());
-
-    const matches = jobKeywords.filter(keyword =>
-        cvKeywords.some(cvKeyword => cvKeyword.includes(keyword) || keyword.includes(cvKeyword))
-    );
-
-    const alignmentScore = Math.min(95, Math.max(15, (matches.length / jobKeywords.length) * 100));
-
-    return {
-        candidateStrengths: [
-            'Relevant technical skills identified',
-            'Professional experience documented',
-            'Educational background present',
-            'Career progression shown'
-        ],
-        candidateWeaknesses: [
-            'Some skill gaps may exist',
-            'Specific domain experience needs verification',
-            'Certification status unclear'
-        ],
-        alignmentScore: Math.round(alignmentScore),
-        keyMatches: matches.slice(0, 5),
-        recommendations: [
-            'Interview to assess technical depth',
-            'Verify specific technology experience',
-            'Evaluate cultural fit',
-            'Discuss career goals and motivation'
-        ],
-        summary: `The candidate shows ${alignmentScore > 70 ? 'strong' : alignmentScore > 50 ? 'moderate' : 'limited'} alignment with the job requirements. ${matches.length} key skills/requirements match. Recommended for ${alignmentScore > 70 ? 'interview' : alignmentScore > 50 ? 'further evaluation' : 'consideration with reservations'}.`
-    };
-}
-
-function extractKeywords(text: string): string[] {
-    // Simple keyword extraction for mock analysis
-    const commonSkills = [
-        'javascript', 'python', 'java', 'react', 'node', 'sql', 'aws', 'docker',
-        'kubernetes', 'git', 'api', 'database', 'frontend', 'backend', 'fullstack',
-        'agile', 'scrum', 'testing', 'ci/cd', 'devops', 'cloud', 'microservices',
-        'typescript', 'angular', 'vue', 'mongodb', 'postgresql', 'redis', 'nginx'
-    ];
-
-    return commonSkills.filter(skill => text.includes(skill));
 }

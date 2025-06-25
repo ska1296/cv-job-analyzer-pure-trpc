@@ -7,15 +7,15 @@ An AI-powered Node.js server with tRPC that analyzes CVs against job description
 - **PDF Analysis**: Extracts and analyzes text from PDF files
 - **AI-Powered Insights**: Uses Gemini 1.5 Flash via custom endpoint for comprehensive candidate evaluation
 - **tRPC Integration**: Type-safe API with excellent developer experience
-- **Easy Testing**: Built-in web interface and multiple testing methods
-- **Fallback Analysis**: Works with mock analysis when Gemini API is unavailable
+- **Easy Testing**: Built-in test client and multiple testing methods
+- **Robust Error Handling**: Comprehensive error management and validation
 - **File Upload Support**: Handles multiple PDF uploads securely
 
 ## 📋 Requirements
 
 - Node.js 18+
 - npm or yarn
-- Gemini 1.5 Flash authorization token (optional - uses mock analysis as fallback)
+- Gemini 1.5 Flash authorization token (required for AI analysis)
 
 ## 🛠️ Setup
 
@@ -36,11 +36,11 @@ npm install
 # Copy the example environment file
 cp .env.example .env
 
-# Edit .env and add your Gemini authorization token (optional)
+# Edit .env and add your Gemini authorization token (required)
 # GEMINI_AUTH_TOKEN=your_auth_token_here
 ```
 
-**Note**: The system works without a Gemini authorization token by using intelligent mock analysis.
+**Note**: The GEMINI_AUTH_TOKEN is required for the system to function.
 
 ### 3. Start the Server
 
@@ -185,7 +185,7 @@ The system handles various error scenarios:
 
 - Invalid PDF files
 - Large file uploads (10MB limit)
-- Missing API keys (falls back to mock analysis)
+- Missing or invalid authorization tokens
 - Network issues with AI service
 - Malformed requests
 
@@ -240,9 +240,9 @@ MIT License - see LICENSE file for details
 - Check if PDF contains extractable text (not just images)
 
 **AI analysis returns errors**
-- Verify Gemini authorization token is valid
+- Verify Gemini authorization token is valid and properly set
 - Check API usage limits (20 req/min, 300 req/hour)
-- System will automatically fall back to mock analysis
+- Ensure network connectivity to the custom endpoint
 
 **File upload fails**
 - Check file size (max 10MB)
