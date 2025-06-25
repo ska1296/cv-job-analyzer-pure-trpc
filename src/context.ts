@@ -1,7 +1,8 @@
 import { inferAsyncReturnType } from '@trpc/server';
-import { CreateExpressContextOptions } from '@trpc/server/adapters/express';
+import { NodeHTTPCreateContextFnOptions } from '@trpc/server/adapters/node-http';
+import { IncomingMessage, ServerResponse } from 'http';
 
-export const createContext = (opts?: CreateExpressContextOptions) => {
+export const createContext = (opts?: NodeHTTPCreateContextFnOptions<IncomingMessage, ServerResponse>) => {
     return {
         req: opts?.req,
         res: opts?.res,
