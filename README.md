@@ -137,7 +137,8 @@ src/
 │   └── ai-service.ts  # AI analysis logic
 └── utils/
     └── pdf-parser.ts  # PDF text extraction
-evaluation-prompt.txt  # AI evaluation prompt template
+system-prompt.txt      # AI system role prompt (instructions & context)
+user-prompt.txt        # AI user role prompt template (request format)
 ```
 
 ### Available Scripts
@@ -163,11 +164,12 @@ npm run test-client # Run tRPC test client
 This project uses a custom Gemini 1.5 Flash endpoint instead of Google's standard API:
 
 - **Endpoint**: `https://intertest.woolf.engineering/invoke`
-- **Format**: VertexAI GenerateContentRequest
+- **Format**: VertexAI GenerateContentRequest (official specification)
 - **Rate Limits**: 20 requests/minute, 300 requests/hour
 - **Authentication**: Bearer token (provided separately)
+- **Role-Based Prompts**: Uses `systemInstruction` and `contents` fields for optimal AI performance
 
-The implementation follows the VertexAI API specification for maximum compatibility.
+The implementation follows the official VertexAI GenerateContentRequest specification exactly, using proper role separation with system instructions for the AI's role and user content for evaluation requests.
 
 ## 🎯 Analysis Criteria
 
@@ -202,7 +204,12 @@ The system handles various error scenarios:
 
 ### Adding Custom Analysis Logic
 
-To customize the AI evaluation criteria, edit the `evaluation-prompt.txt` file. This contains the prompt template sent to the AI service with placeholders for job description and CV content.
+To customize the AI evaluation criteria, edit the prompt files:
+
+- **`system-prompt.txt`**: Contains the AI's role, instructions, and evaluation guidelines (used in `systemInstruction` field)
+- **`user-prompt.txt`**: Contains the request format with placeholders for job description and CV content (used in `contents` array)
+
+This role-based approach follows the official VertexAI GenerateContentRequest specification and provides better AI performance by properly separating system instructions from user requests.
 
 You can also modify `src/services/ai-service.ts` to add additional processing logic or change the AI service configuration.
 
