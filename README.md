@@ -9,13 +9,13 @@ An AI-powered Node.js server with tRPC that analyzes CVs against job description
 - **tRPC Integration**: Type-safe API with excellent developer experience
 - **Easy Testing**: Built-in test client and multiple testing methods
 - **Robust Error Handling**: Comprehensive error management and validation
-- **File Upload Support**: Handles multiple PDF uploads securely
+- **Base64 PDF Processing**: Accepts PDFs as base64 encoded strings via tRPC
 
 ## 📋 Requirements
 
 - Node.js 18+
-- npm or yarn
-- Gemini 1.5 Flash authorization token (required for AI analysis)
+- npm
+- Authorization token (required for AI analysis)
 
 ## 🛠️ Setup
 
@@ -23,8 +23,8 @@ An AI-powered Node.js server with tRPC that analyzes CVs against job description
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd cv-job-analyzer
+git clone git@github.com:ska1296/cv-job-analyzer-pure-trpc.git
+cd cv-job-analyzer-pure-trpc
 
 # Install dependencies
 npm install
@@ -37,7 +37,7 @@ npm install
 cp .env.example .env
 
 # Edit .env and add your Gemini authorization token (required)
-# GEMINI_AUTH_TOKEN=your_auth_token_here
+GEMINI_AUTH_TOKEN=your_auth_token_here
 ```
 
 **Note**: The GEMINI_AUTH_TOKEN is required for the system to function.
@@ -79,26 +79,7 @@ npm run test-client
 - Edit `src/test-client.ts` to change file paths, add logging, or test different scenarios
 - The client code shows exactly how to integrate tRPC calls into your application
 
-### Method 2: tRPC Client (Recommended)
 
-```typescript
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { AppRouter } from './src/router';
-
-const client = createTRPCProxyClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: 'http://localhost:3000/trpc',
-    }),
-  ],
-});
-
-// Use the client
-const result = await client.analyze.mutate({
-  jobDescriptionPdf: jobDescriptionBuffer,
-  cvPdf: cvBuffer,
-});
-```
 
 ## 📊 API Response Format
 
@@ -167,7 +148,7 @@ npm run test-client # Run tRPC test client
 
 ## 🔍 How It Works
 
-1. **PDF Upload**: Server receives two PDF files via tRPC as base64 encoded strings
+1. **PDF Input**: Server receives two PDF files via tRPC as base64 encoded strings
 2. **Text Extraction**: Uses `pdf-parse` to extract text content from PDFs
 3. **AI Analysis**: Sends extracted text to Gemini 1.5 Flash via custom endpoint for comprehensive analysis
 4. **Response**: Returns structured analysis with scores, strengths, weaknesses, and recommendations
@@ -224,19 +205,6 @@ export const appRouter = router({
     }),
 });
 ```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## 📄 License
-
-MIT License - see LICENSE file for details
-
 ## 🆘 Troubleshooting
 
 ### Common Issues
@@ -255,11 +223,7 @@ MIT License - see LICENSE file for details
 - Ensure file is a valid PDF
 - Verify correct form field names
 
-### Getting Help
 
-- Check the console output for detailed error messages
-- Test with the health endpoint: `http://localhost:3000/health`
-- Use the web interface for easier debugging
 
 ---
 
