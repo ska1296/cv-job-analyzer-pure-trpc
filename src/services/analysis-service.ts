@@ -1,19 +1,6 @@
 import { extractTextFromPdf } from '../utils/pdf-parser';
-import { analyzeWithAI, AnalysisResult } from './ai-service';
-
-export interface AnalysisInput {
-    jobDescriptionPdf: string;
-    cvPdf: string;
-}
-
-export interface AnalysisResponse {
-    analysis: AnalysisResult;
-    metadata: {
-        processedAt: string;
-        jobDescriptionLength: number;
-        cvLength: number;
-    };
-}
+import { analyzeWithAI } from './ai-service';
+import { AnalysisInput, AnalysisOutput } from '../types/analysis';
 
 export class AnalysisError extends Error {
     constructor(
@@ -26,7 +13,7 @@ export class AnalysisError extends Error {
     }
 }
 
-export async function performAnalysis(input: AnalysisInput): Promise<AnalysisResponse> {
+export async function performAnalysis(input: AnalysisInput): Promise<AnalysisOutput> {
     // Convert base64 to buffers
     const jobDescriptionBuffer = Buffer.from(input.jobDescriptionPdf, 'base64');
     const cvBuffer = Buffer.from(input.cvPdf, 'base64');
@@ -73,7 +60,7 @@ export async function performAnalysis(input: AnalysisInput): Promise<AnalysisRes
     }
 
     // Analyze with AI
-    let analysis: AnalysisResult;
+    let analysis;
     try {
         analysis = await analyzeWithAI(jobDescriptionText, cvText);
     } catch (error) {
