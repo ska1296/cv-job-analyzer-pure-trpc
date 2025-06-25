@@ -166,7 +166,7 @@ This project uses a custom Gemini 1.5 Flash endpoint instead of Google's standar
 - **Endpoint**: `https://intertest.woolf.engineering/invoke`
 - **Format**: VertexAI GenerateContentRequest (official specification)
 - **Rate Limits**: 20 requests/minute, 300 requests/hour
-- **Authentication**: Bearer token (provided separately)
+- **Authentication**: Authorization token without 'Bearer' prefix (provided separately)
 - **Role-Based Prompts**: Uses `systemInstruction` and `contents` fields for optimal AI performance
 
 The implementation follows the official VertexAI GenerateContentRequest specification exactly, using proper role separation with system instructions for the AI's role and user content for evaluation requests.
