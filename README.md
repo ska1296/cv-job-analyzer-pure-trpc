@@ -218,10 +218,10 @@ export const appRouter = router({
 - Check API usage limits (20 req/min, 300 req/hour)
 - Ensure network connectivity to the custom endpoint
 
-**File upload fails**
-- Check file size (max 10MB)
-- Ensure file is a valid PDF
-- Verify correct form field names
+**PDF processing fails**
+- Ensure file is a valid PDF with extractable text
+- Check that base64 encoding is correct
+- Verify PDFs are not password protected or corrupted
 
 
 
