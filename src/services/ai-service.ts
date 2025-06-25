@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 // Ensure environment variables are loaded
 dotenv.config();
@@ -45,49 +47,26 @@ export interface AnalysisResult {
     summary: string;
 }
 
+function loadPromptTemplate(): string {
+    try {
+        const promptPath = path.join(process.cwd(), 'evaluation-prompt.txt');
+        return fs.readFileSync(promptPath, 'utf-8');
+    } catch (error) {
+        console.error('Failed to load evaluation prompt template:', error);
+        throw new Error('Could not load evaluation prompt template');
+    }
+}
+
 export async function analyzeWithAI(jobDescription: string, cv: string): Promise<AnalysisResult> {
     if (!AUTH_TOKEN) {
         throw new Error('GEMINI_AUTH_TOKEN is required for AI analysis');
     }
 
-    const prompt = `
-You are an expert HR analyst and technical recruiter. Analyze the following job description and CV/resume, then provide a comprehensive evaluation.
-
-JOB DESCRIPTION:
-${jobDescription}
-
-CANDIDATE CV/RESUME:
-${cv}
-
-Please analyze and provide a response in the following JSON format:
-{
-  "candidateStrengths": ["strength1", "strength2", ...],
-  "candidateWeaknesses": ["weakness1", "weakness2", ...],
-  "alignmentScore": 85,
-  "keyMatches": ["match1", "match2", ...],
-  "recommendations": ["recommendation1", "recommendation2", ...],
-  "summary": "Overall assessment summary"
-}
-
-Analysis Guidelines:
-1. **Technical Skills**: Match specific technologies, frameworks, and tools mentioned in both documents
-2. **Experience Level**: Compare required vs actual years of experience, seniority level
-3. **Industry Context**: Consider domain expertise, company size/stage alignment
-4. **Role Responsibilities**: Evaluate how past roles align with job requirements
-5. **Cultural Fit**: Assess work environment preferences, team dynamics, growth mindset
-6. **Red Flags**: Identify any concerning gaps, inconsistencies, or misalignments
-
-Scoring Criteria (0-100):
-- 90-100: Exceptional fit, minimal gaps
-- 80-89: Strong fit, minor gaps that can be addressed
-- 70-79: Good fit, some notable gaps requiring discussion
-- 60-69: Moderate fit, significant gaps but potential
-- Below 60: Poor fit, major misalignments
-
-Provide specific, actionable insights with concrete examples from the CV. Focus on what makes this candidate unique and what specific questions to ask in interviews.
-
-IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations, just the JSON object.
-`;
+    // Load and populate the prompt template
+    const promptTemplate = loadPromptTemplate();
+    const prompt = promptTemplate
+        .replace('{JOB_DESCRIPTION}', jobDescription)
+        .replace('{CV}', cv);
 
     // Create VertexAI GenerateContentRequest
     const requestBody: GenerateContentRequest = {
