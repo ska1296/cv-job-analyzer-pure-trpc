@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+
+// Ensure environment variables are loaded
+dotenv.config();
+
 // Custom Gemini 1.5 Flash endpoint configuration
 const GEMINI_ENDPOINT = 'https://intertest.woolf.engineering/invoke';
 const AUTH_TOKEN = process.env.GEMINI_AUTH_TOKEN || '';
@@ -102,7 +107,7 @@ IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${AUTH_TOKEN}`,
+                'Authorization': `${AUTH_TOKEN}`,
             },
             body: JSON.stringify(requestBody),
         });
@@ -110,6 +115,11 @@ IMPORTANT: Respond ONLY with valid JSON. No markdown formatting, no explanations
         if (!response.ok) {
             const errorText = await response.text();
             console.error(`Gemini API error (${response.status}):`, errorText);
+            console.error('Request headers:', {
+                'Content-Type': 'application/json',
+                'Authorization': `${AUTH_TOKEN.substring(0, 10)}...`,
+            });
+            console.error('Request body:', JSON.stringify(requestBody, null, 2));
 
             if (response.status === 429) {
                 throw new Error('Rate limit exceeded. Please try again later.');
