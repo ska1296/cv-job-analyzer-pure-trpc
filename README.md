@@ -125,12 +125,15 @@ The analysis returns a comprehensive evaluation:
 ```
 src/
 ├── server.ts          # Main server setup
-├── router.ts          # tRPC router and procedures
+├── router.ts          # tRPC router and procedures (thin layer)
 ├── context.ts         # tRPC context
 ├── services/
-│   └── ai-service.ts  # AI analysis logic
+│   ├── analysis-service.ts  # Main business logic orchestration
+│   └── ai-service.ts        # AI analysis logic
+├── types/
+│   └── analysis.ts          # TypeScript interfaces and Zod schemas
 └── utils/
-    └── pdf-parser.ts  # PDF text extraction
+    └── pdf-parser.ts        # PDF text extraction
 system-prompt.txt      # AI system role prompt (instructions & context)
 user-prompt.txt        # AI user role prompt template (request format)
 ```
@@ -188,7 +191,10 @@ To customize the AI evaluation criteria, edit the prompt files:
 
 This role-based approach follows the official VertexAI GenerateContentRequest specification and provides better AI performance by properly separating system instructions from user requests.
 
-You can also modify `src/services/ai-service.ts` to add additional processing logic or change the AI service configuration.
+You can also modify:
+- `src/services/analysis-service.ts` to change the main business logic flow
+- `src/services/ai-service.ts` to add additional AI processing logic or change the AI service configuration
+- `src/types/analysis.ts` to modify input/output schemas and TypeScript interfaces
 
 ### Extending the API
 
