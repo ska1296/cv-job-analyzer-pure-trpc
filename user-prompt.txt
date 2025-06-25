@@ -1,0 +1,17 @@
+Please analyze the following job description and candidate CV/resume, then provide a comprehensive evaluation.
+
+JOB DESCRIPTION:
+{JOB_DESCRIPTION}
+
+CANDIDATE CV/RESUME:
+{CV}
+
+Please provide your analysis in the following JSON format:
+{
+  "candidateStrengths": ["strength1", "strength2", ...],
+  "candidateWeaknesses": ["weakness1", "weakness2", ...],
+  "alignmentScore": 85,
+  "keyMatches": ["match1", "match2", ...],
+  "recommendations": ["recommendation1", "recommendation2", ...],
+  "summary": "Overall assessment summary"
+}

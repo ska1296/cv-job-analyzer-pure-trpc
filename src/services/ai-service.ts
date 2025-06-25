@@ -12,6 +12,7 @@ const AUTH_TOKEN = process.env.GEMINI_AUTH_TOKEN || '';
 // VertexAI GenerateContentRequest interface
 interface GenerateContentRequest {
     contents: Content[];
+    systemInstruction?: string | Content;
     generationConfig?: GenerationConfig;
     safetySettings?: SafetySetting[];
 }
@@ -47,13 +48,23 @@ export interface AnalysisResult {
     summary: string;
 }
 
-function loadPromptTemplate(): string {
+function loadSystemPrompt(): string {
     try {
-        const promptPath = path.join(process.cwd(), 'evaluation-prompt.txt');
+        const promptPath = path.join(process.cwd(), 'system-prompt.txt');
         return fs.readFileSync(promptPath, 'utf-8');
     } catch (error) {
-        console.error('Failed to load evaluation prompt template:', error);
-        throw new Error('Could not load evaluation prompt template');
+        console.error('Failed to load system prompt:', error);
+        throw new Error('Could not load system prompt template');
+    }
+}
+
+function loadUserPromptTemplate(): string {
+    try {
+        const promptPath = path.join(process.cwd(), 'user-prompt.txt');
+        return fs.readFileSync(promptPath, 'utf-8');
+    } catch (error) {
+        console.error('Failed to load user prompt template:', error);
+        throw new Error('Could not load user prompt template');
     }
 }
 
@@ -62,20 +73,22 @@ export async function analyzeWithAI(jobDescription: string, cv: string): Promise
         throw new Error('GEMINI_AUTH_TOKEN is required for AI analysis');
     }
 
-    // Load and populate the prompt template
-    const promptTemplate = loadPromptTemplate();
-    const prompt = promptTemplate
+    // Load system and user prompts
+    const systemPrompt = loadSystemPrompt();
+    const userPromptTemplate = loadUserPromptTemplate();
+    const userPrompt = userPromptTemplate
         .replace('{JOB_DESCRIPTION}', jobDescription)
         .replace('{CV}', cv);
 
-    // Create VertexAI GenerateContentRequest
+    // Create VertexAI GenerateContentRequest following the official specification
     const requestBody: GenerateContentRequest = {
+        systemInstruction: systemPrompt,
         contents: [
             {
                 role: "user",
                 parts: [
                     {
-                        text: prompt
+                        text: userPrompt
                     }
                 ]
             }
