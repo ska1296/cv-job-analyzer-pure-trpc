@@ -57,27 +57,40 @@ The server will start on `http://localhost:3000`
 
 ## 🧪 Testing the API
 
-### Built-in Test Client
+### Testing Options
 
+#### Simple Test Client
 ```bash
-# Run the built-in test client
+# Run the simple test client (success case only)
 npm run test-client
 ```
 
 **How it works:**
-- The test client reads `sample-job.pdf` and `sample-cv.pdf` from the project root directory
+- Reads `sample-job.pdf` and `sample-cv.pdf` from the project root directory
 - PDFs are loaded from disk using `fs.readFileSync()` and converted to base64
-- The client makes a tRPC call to the `/analyze` endpoint
-- Results are displayed in the console
+- Makes a tRPC call to the `/analyze` endpoint
+- Displays the full analysis result
+
+#### Comprehensive Test Suite
+```bash
+# Run comprehensive tests (success + error cases)
+npm run test-comprehensive
+```
+
+**What it tests:**
+- ✅ **Success Case**: Valid PDF analysis with detailed results
+- ❌ **Error Cases**: Invalid PDFs, empty content, type validation, large files
+- 🌐 **Connectivity**: Server responsiveness and error handling
+- 📊 **Coverage**: Input validation, PDF processing, AI integration
 
 **To test with your own PDFs:**
 1. Replace `sample-job.pdf` with your job description PDF
 2. Replace `sample-cv.pdf` with your candidate's CV PDF
-3. Run `npm run test-client`
+3. Run either test command
 
-**To modify the test client:**
-- Edit `src/test-client.ts` to change file paths, add logging, or test different scenarios
-- The client code shows exactly how to integrate tRPC calls into your application
+**To modify the tests:**
+- Edit `src/test-client.ts` for simple success testing
+- Edit `src/comprehensive-test.ts` for advanced error testing scenarios
 
 
 
@@ -141,10 +154,11 @@ user-prompt.txt        # AI user role prompt template (request format)
 ### Available Scripts
 
 ```bash
-npm run dev         # Start development server with hot reload
-npm run build       # Build TypeScript to JavaScript
-npm run start       # Start production server
-npm run test-client # Run tRPC test client
+npm run dev                 # Start development server with hot reload
+npm run build               # Build TypeScript to JavaScript
+npm run start               # Start production server
+npm run test-client         # Run simple tRPC test client (success case)
+npm run test-comprehensive  # Run comprehensive test suite (success + errors)
 ```
 
 
