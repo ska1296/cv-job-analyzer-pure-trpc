@@ -13,31 +13,58 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #e2e8f0;
             line-height: 1.6;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(26, 32, 44, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header {
-            background: #007bff;
-            color: white;
-            padding: 20px;
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #f7fafc;
+            padding: 30px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.05"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.05"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
         }
 
         .header h1 {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
         .content {
@@ -46,17 +73,33 @@
 
         .upload-section {
             margin-bottom: 30px;
-            padding: 20px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            background: #fafafa;
+            padding: 30px;
+            border: 2px dashed #4a5568;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-section:hover {
+            border-color: #63b3ed;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 179, 237, 0.2);
         }
 
         .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #333;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '📄';
+            font-size: 24px;
         }
 
         .file-input-group {
@@ -67,51 +110,164 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #555;
+            color: #cbd5e0;
         }
 
         .file-input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            background: white;
+            padding: 18px 20px;
+            border: 2px solid #4a5568;
+            border-radius: 12px;
+            font-size: 15px;
+            background: linear-gradient(145deg, #1a202c 0%, #2d3748 100%);
+            color: #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 4px 10px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .file-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(99, 179, 237, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
 
         .file-input:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            border-color: #63b3ed;
+            box-shadow:
+                0 0 0 3px rgba(99, 179, 237, 0.3),
+                0 6px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            background: linear-gradient(145deg, #2d3748 0%, #4a5568 100%);
+        }
+
+        .file-input:hover {
+            border-color: #63b3ed;
+            transform: translateY(-1px);
+            box-shadow:
+                0 6px 15px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .file-input:hover::before {
+            transform: translateX(100%);
+        }
+
+        .file-input::file-selector-button {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.3);
+        }
+
+        .file-input::file-selector-button:hover {
+            background: linear-gradient(135deg, #63b3ed 0%, #4299e1 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
         }
 
         .analyze-btn {
             width: 100%;
-            padding: 15px;
-            background: #007bff;
+            padding: 20px 32px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 50%, #2c5aa0 100%);
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow:
+                0 8px 25px rgba(66, 153, 225, 0.4),
+                0 4px 10px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .analyze-btn::after {
+            content: '🚀';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            transition: all 0.3s ease;
         }
 
         .analyze-btn:hover {
-            background: #0056b3;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow:
+                0 15px 35px rgba(66, 153, 225, 0.6),
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #63b3ed 0%, #4299e1 50%, #3182ce 100%);
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn:hover::after {
+            transform: translateY(-50%) translateX(4px) rotate(15deg);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(-2px) scale(0.98);
+            transition: all 0.1s ease;
         }
 
         .analyze-btn:disabled {
-            background: #6c757d;
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0.6;
+        }
+
+        .analyze-btn:disabled::after {
+            content: '⏳';
+            transform: translateY(-50%);
         }
 
         .loading {
             display: none;
             text-align: center;
             padding: 20px;
-            color: #666;
+            color: #a0aec0;
         }
 
         .loading.show {
@@ -122,9 +278,9 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 2px solid #f3f3f3;
+            border: 2px solid #4a5568;
             border-radius: 50%;
-            border-top-color: #007bff;
+            border-top-color: #63b3ed;
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
         }
@@ -143,61 +299,103 @@
         }
 
         .result-section {
-            margin-bottom: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #007bff;
+            margin-bottom: 25px;
+            padding: 25px;
+            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            border-radius: 16px;
+            border-left: 5px solid #63b3ed;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .result-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .result-title {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #f7fafc;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-title::before {
+            content: attr(data-icon);
+            font-size: 20px;
         }
 
         .result-content {
-            color: #555;
+            color: #cbd5e0;
         }
 
         .score {
-            font-size: 32px;
-            font-weight: bold;
+            font-size: 48px;
+            font-weight: 800;
             text-align: center;
-            padding: 20px;
-            background: #e9ecef;
-            border-radius: 8px;
-            margin: 15px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            border-radius: 20px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #4a5568;
+        }
+
+        .score::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(99, 179, 237, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .list-item {
-            margin-bottom: 8px;
-            padding-left: 20px;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            padding-left: 40px;
             position: relative;
+            background: rgba(99, 179, 237, 0.1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .list-item:hover {
+            background: rgba(99, 179, 237, 0.2);
+            transform: translateX(4px);
         }
 
         .list-item::before {
-            content: "•";
+            content: "✓";
             position: absolute;
-            left: 0;
-            color: #007bff;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #63b3ed;
             font-weight: bold;
+            font-size: 14px;
         }
 
         .error {
-            background: #f8d7da;
-            border-left-color: #dc3545;
-            color: #721c24;
+            background: linear-gradient(145deg, #742a2a 0%, #63171b 100%);
+            border-left-color: #fc8181;
+            color: #fed7d7;
         }
 
         .metadata {
             font-size: 14px;
-            color: #6c757d;
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 4px;
+            color: #a0aec0;
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(145deg, #1a202c 0%, #2d3748 100%);
+            border-radius: 12px;
+            border: 1px solid #4a5568;
         }
 
         @media (max-width: 768px) {
@@ -240,7 +438,7 @@
 
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                Processing documents... Please wait...
+                Processing documents, please wait...
             </div>
 
             <div class="results" id="results">
@@ -373,14 +571,19 @@
 
                 results.innerHTML = `
                     <div class="result-section">
-                        <div class="result-title">Alignment Score</div>
+                        <div class="result-title" data-icon="🎯">Alignment Score</div>
                         <div class="score" style="color: ${scoreColor}">
                             ${analysis.alignmentScore}%
                         </div>
                     </div>
 
                     <div class="result-section">
-                        <div class="result-title">Candidate Strengths</div>
+                        <div class="result-title" data-icon="📋">Summary</div>
+                        <div class="result-content">${analysis.summary}</div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title" data-icon="💪">Candidate Strengths</div>
                         <div class="result-content">
                             ${analysis.candidateStrengths.map(strength =>
                                 `<div class="list-item">${strength}</div>`
@@ -389,7 +592,7 @@
                     </div>
 
                     <div class="result-section">
-                        <div class="result-title">Areas for Improvement</div>
+                        <div class="result-title" data-icon="📈">Areas for Improvement</div>
                         <div class="result-content">
                             ${analysis.candidateWeaknesses.map(weakness =>
                                 `<div class="list-item">${weakness}</div>`
@@ -398,7 +601,7 @@
                     </div>
 
                     <div class="result-section">
-                        <div class="result-title">Key Matches</div>
+                        <div class="result-title" data-icon="✨">Key Matches</div>
                         <div class="result-content">
                             ${analysis.keyMatches.map(match =>
                                 `<div class="list-item">${match}</div>`
@@ -407,7 +610,7 @@
                     </div>
 
                     <div class="result-section">
-                        <div class="result-title">Recommendations</div>
+                        <div class="result-title" data-icon="💡">Recommendations</div>
                         <div class="result-content">
                             ${analysis.recommendations.map(rec =>
                                 `<div class="list-item">${rec}</div>`
@@ -415,16 +618,11 @@
                         </div>
                     </div>
 
-                    <div class="result-section">
-                        <div class="result-title">Summary</div>
-                        <div class="result-content">${analysis.summary}</div>
-                    </div>
-
                     <div class="metadata">
-                        <strong>Analysis Details:</strong><br>
-                        Processed: ${new Date(metadata.processedAt).toLocaleString()}<br>
-                        Job Description: ${metadata.jobDescriptionLength} characters<br>
-                        CV: ${metadata.cvLength} characters
+                        <strong>📊 Analysis Details:</strong><br>
+                        🕒 Processed: ${new Date(metadata.processedAt).toLocaleString()}<br>
+                        📄 Job Description: ${metadata.jobDescriptionLength} characters<br>
+                        📝 CV: ${metadata.cvLength} characters
                     </div>
                 `;
 
