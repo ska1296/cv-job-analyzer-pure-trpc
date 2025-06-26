@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .file-input-group {
+            margin-bottom: 20px;
+        }
+
+        .file-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .file-input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .analyze-btn:hover {
+            background: #0056b3;
+        }
+
+        .analyze-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .result-content {
+            color: #555;
+        }
+
+        .score {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .list-item {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .list-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .metadata {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+    <script src="app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CV Analyzer</h1>
+            <p>Upload job description and CV to get AI-powered analysis</p>
+        </div>
+
+        <div class="content">
+            <div class="upload-section">
+                <div class="section-title">Upload Documents</div>
+
+                <div class="file-input-group">
+                    <label class="file-label" for="jobFile">Job Description PDF:</label>
+                    <input type="file" id="jobFile" class="file-input" accept=".pdf" />
+                </div>
+
+                <div class="file-input-group">
+                    <label class="file-label" for="cvFile">Candidate CV PDF:</label>
+                    <input type="file" id="cvFile" class="file-input" accept=".pdf" />
+                </div>
+
+                <button id="analyzeBtn" class="analyze-btn">
+                    Analyze Documents
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Processing documents... Please wait...
+            </div>
+
+            <div class="results" id="results">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- tRPC vanilla client using ES modules -->
+    <script type="module">
+        import { createTRPCProxyClient, httpBatchLink } from 'https://esm.sh/@trpc/client@10.45.0';
+
+        // Create tRPC client
+        const client = createTRPCProxyClient({
+            links: [
+                httpBatchLink({
+                    url: 'http://localhost:3000',
+                }),
+            ],
+        });
+
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing REAL tRPC client...');
+
+            // DOM Elements
+            const jobFileInput = document.getElementById('jobFile');
+            const cvFileInput = document.getElementById('cvFile');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+
+            console.log('DOM Elements found:', {
+                jobFileInput: !!jobFileInput,
+                cvFileInput: !!cvFileInput,
+                analyzeBtn: !!analyzeBtn,
+                loading: !!loading,
+                results: !!results
+            });
+
+            if (!analyzeBtn) {
+                console.error('Analyze button not found!');
+                return;
+            }
+
+            // File to Base64 conversion
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        const base64 = reader.result.split(',')[1];
+                        resolve(base64);
+                    };
+                    reader.onerror = error => reject(error);
+                });
+            }
+
+            // Validate files
+            function validateFiles() {
+                const jobFile = jobFileInput.files?.[0];
+                const cvFile = cvFileInput.files?.[0];
+
+                if (!jobFile || !cvFile) {
+                    return { valid: false, message: 'Please select both PDF files' };
+                }
+
+                if (jobFile.type !== 'application/pdf') {
+                    return { valid: false, message: 'Job description must be a PDF file' };
+                }
+
+                if (cvFile.type !== 'application/pdf') {
+                    return { valid: false, message: 'CV must be a PDF file' };
+                }
+
+                return { valid: true };
+            }
+
+            // Show loading state
+            function showLoading() {
+                loading.classList.add('show');
+                results.classList.remove('show');
+                analyzeBtn.disabled = true;
+                analyzeBtn.textContent = 'Processing...';
+            }
+
+            // Hide loading state
+            function hideLoading() {
+                loading.classList.remove('show');
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Analyze Documents';
+            }
+
+            // Display error
+            function displayError(message) {
+                results.innerHTML = `
+                    <div class="result-section error">
+                        <div class="result-title">Error</div>
+                        <div class="result-content">${message}</div>
+                    </div>
+                `;
+                results.classList.add('show');
+            }
+
+            // Display results
+            function displayResults(data) {
+                console.log('Displaying results for data:', data);
+
+                if (!data || typeof data !== 'object') {
+                    displayError('Invalid response format from server');
+                    return;
+                }
+
+                const { analysis, metadata } = data;
+
+                if (!analysis) {
+                    displayError('No analysis data received from server');
+                    return;
+                }
+
+                if (typeof analysis.alignmentScore === 'undefined') {
+                    displayError('Invalid analysis format: missing alignment score');
+                    return;
+                }
+
+                // Create score color based on alignment score
+                let scoreColor = '#dc3545';
+                if (analysis.alignmentScore >= 70) scoreColor = '#ffc107';
+                if (analysis.alignmentScore >= 85) scoreColor = '#28a745';
+
+                results.innerHTML = `
+                    <div class="result-section">
+                        <div class="result-title">Alignment Score</div>
+                        <div class="score" style="color: ${scoreColor}">
+                            ${analysis.alignmentScore}%
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">Candidate Strengths</div>
+                        <div class="result-content">
+                            ${analysis.candidateStrengths.map(strength =>
+                                `<div class="list-item">${strength}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">Areas for Improvement</div>
+                        <div class="result-content">
+                            ${analysis.candidateWeaknesses.map(weakness =>
+                                `<div class="list-item">${weakness}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">Key Matches</div>
+                        <div class="result-content">
+                            ${analysis.keyMatches.map(match =>
+                                `<div class="list-item">${match}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">Recommendations</div>
+                        <div class="result-content">
+                            ${analysis.recommendations.map(rec =>
+                                `<div class="list-item">${rec}</div>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-title">Summary</div>
+                        <div class="result-content">${analysis.summary}</div>
+                    </div>
+
+                    <div class="metadata">
+                        <strong>Analysis Details:</strong><br>
+                        Processed: ${new Date(metadata.processedAt).toLocaleString()}<br>
+                        Job Description: ${metadata.jobDescriptionLength} characters<br>
+                        CV: ${metadata.cvLength} characters
+                    </div>
+                `;
+
+                results.classList.add('show');
+            }
+
+            // Main analysis function
+            async function analyzeDocuments() {
+                console.log('analyzeDocuments called with REAL tRPC client');
+
+                const validation = validateFiles();
+                if (!validation.valid) {
+                    displayError(validation.message);
+                    return;
+                }
+
+                showLoading();
+
+                try {
+                    const jobFile = jobFileInput.files[0];
+                    const cvFile = cvFileInput.files[0];
+
+                    console.log('Converting files to base64...');
+                    const [jobDescriptionPdf, cvPdf] = await Promise.all([
+                        fileToBase64(jobFile),
+                        fileToBase64(cvFile)
+                    ]);
+
+                    console.log('Calling REAL tRPC client.analyze.mutate() - NO FETCH!');
+
+                    // THIS IS A REAL tRPC CALL - NO FETCH!
+                    const result = await client.analyze.mutate({
+                        jobDescriptionPdf,
+                        cvPdf
+                    });
+
+                    console.log('Analysis completed successfully:', result);
+                    displayResults(result);
+
+                } catch (error) {
+                    console.error('Analysis failed:', error);
+
+                    let errorMessage = 'An unexpected error occurred';
+                    if (error?.message) {
+                        errorMessage = error.message;
+                    }
+
+                    if (errorMessage.includes('Rate limit')) {
+                        errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+                    } else if (errorMessage.includes('GEMINI_AUTH_TOKEN')) {
+                        errorMessage = 'AI service not configured. Please check server configuration.';
+                    } else if (errorMessage.includes('PDF')) {
+                        errorMessage = 'PDF processing failed. Please ensure files are valid PDFs with extractable text.';
+                    }
+
+                    displayError(errorMessage);
+                } finally {
+                    hideLoading();
+                }
+            }
+
+            // Event listeners
+            analyzeBtn.addEventListener('click', function() {
+                console.log('Analyze button clicked');
+                analyzeDocuments();
+            });
+
+            jobFileInput.addEventListener('change', function() {
+                if (this.files?.[0]) {
+                    console.log('Job description file selected:', this.files[0].name);
+                }
+            });
+
+            cvFileInput.addEventListener('change', function() {
+                if (this.files?.[0]) {
+                    console.log('CV file selected:', this.files[0].name);
+                }
+            });
+
+            console.log('✅ CV Analyzer UI loaded with REAL tRPC client (NO FETCH!)');
+            console.log('🎯 Using genuine tRPC protocol via client.analyze.mutate()');
+        });
+    </script>
+</body>
+</html>
