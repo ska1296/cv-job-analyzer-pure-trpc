@@ -27,7 +27,10 @@ git clone git@github.com:ska1296/cv-job-analyzer-pure-trpc.git
 cd cv-job-analyzer-pure-trpc
 
 # Install dependencies
-npm install
+npm ci
+
+# Note: Use 'npm install' only if you need to update package-lock.json
+# Use 'npm ci' for faster, reliable installs in production/CI environments
 ```
 
 ### 2. Environment Configuration
